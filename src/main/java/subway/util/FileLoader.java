@@ -71,7 +71,7 @@ public class FileLoader {
     }
 
     private static LinkedList<Station> handleStationsOfLine(String[] stations) {
-        InputValidator.validateStationsIsMoreThanTwo(stations);
+        InputValidator.validateStationsIsLessThanTwo(stations);
         LinkedList<Station> stationsOfLine = new LinkedList<>();
 
         Arrays.stream(stations)
