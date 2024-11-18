@@ -1,11 +1,17 @@
 package subway;
 
-import java.util.Scanner;
 import subway.config.AppConfig;
+import subway.controller.SubwayController;
+import subway.view.OutputView;
 
 public class Application {
     public static void main(String[] args) {
-        final Scanner scanner = new Scanner(System.in);
-        AppConfig appConfig = AppConfig.getAppConfig();
+        try {
+            final AppConfig appConfig = AppConfig.INSTANCE;
+            final SubwayController subwayController = appConfig.getController();
+            subwayController.start();
+        } catch (IllegalArgumentException e) {
+            OutputView.printError(e.getMessage());
+        }
     }
 }
