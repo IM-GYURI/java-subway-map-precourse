@@ -7,7 +7,9 @@ public enum ErrorMessage {
     DUPLICATE_STATION_NAME("이미 존재하는 역 이름입니다."),
     STATION_NOT_EXISTS("존재하지 않는 역 이름입니다."),
     DUPLICATE_LINE_NAME("이미 존재하는 노선 이름입니다."),
-    STATIONS_SHORTAGE("노선은 2개 이상의 역을 포함해야 합니다.");
+    STATIONS_SHORTAGE("노선은 2개 이상의 역을 포함해야 합니다."),
+    INVALID_FEATURE("선택할 수 없는 기능입니다."),
+    TOO_MANY_INVALID_INPUT("유효하지 않은 입력이 5회 반복되어 프로그램이 종료됩니다.");
 
     private static final String PREFIX = "[ERROR] ";
 
