@@ -1,17 +1,20 @@
 package subway.config;
 
-import subway.util.FileLoader;
+import java.util.Scanner;
+import subway.controller.SubwayController;
+import subway.view.InputView;
+import subway.view.OutputView;
 
-public class AppConfig {
+public enum AppConfig {
 
-    private static final AppConfig appConfig = new AppConfig();
+    INSTANCE;
 
-    public static AppConfig getAppConfig() {
-        setStationsAndLines();
-        return appConfig;
-    }
+    private final Scanner scanner = new Scanner(System.in);
+    private final InputView inputView = new InputView(scanner);
+    private final OutputView outputView = new OutputView();
+    private final SubwayController subwayController = new SubwayController(inputView, outputView);
 
-    private static void setStationsAndLines() {
-        FileLoader.loadSettings();
+    public SubwayController getController() {
+        return subwayController;
     }
 }
