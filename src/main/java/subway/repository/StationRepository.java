@@ -23,8 +23,12 @@ public class StationRepository {
         stations.add(station);
     }
 
-    public static boolean deleteStation(String name) {
-        return stations.removeIf(station -> Objects.equals(station.getName(), name));
+    public static void deleteStation(String name) {
+        if (findStation(name).isEmpty()) {
+            throw new IllegalArgumentException(ErrorMessage.STATION_NOT_EXISTS.toString());
+        }
+
+        stations.removeIf(station -> Objects.equals(station.getName(), name));
     }
 
     public static Optional<Station> findStation(String name) {
