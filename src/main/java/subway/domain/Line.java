@@ -1,6 +1,7 @@
 package subway.domain;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Line {
     private String name;
@@ -15,4 +16,8 @@ public class Line {
         return name;
     }
 
+    public List<Station> getStations() {
+        return stations.stream()
+                .toList();
+    }
 }
