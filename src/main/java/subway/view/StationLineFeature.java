@@ -2,7 +2,7 @@ package subway.view;
 
 import subway.exception.ErrorMessage;
 
-public enum StationFeature {
+public enum StationLineFeature {
     SELECT_ONE("1"),
     SELECT_TWO("2"),
     SELECT_THREE("3"),
@@ -10,7 +10,7 @@ public enum StationFeature {
 
     final String message;
 
-    StationFeature(String message) {
+    StationLineFeature(String message) {
         this.message = message;
     }
 
@@ -19,8 +19,8 @@ public enum StationFeature {
         return message;
     }
 
-    public static StationFeature getFeatureFromInput(String input) {
-        for (StationFeature feature : StationFeature.values()) {
+    public static StationLineFeature getFeatureFromInput(String input) {
+        for (StationLineFeature feature : StationLineFeature.values()) {
             if (feature.toString().equalsIgnoreCase(input)) {
                 return feature;
             }
