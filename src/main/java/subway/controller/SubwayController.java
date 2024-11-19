@@ -101,6 +101,7 @@ public class SubwayController {
             String stationName = inputView.askStationDelete();
             InputValidator.validateInput(stationName);
             InputValidator.validateNameLength(stationName);
+            InputValidator.validateIsInLine(stationName);
 
             StationRepository.deleteStation(stationName);
             outputView.printDeleteStationSuccess();
