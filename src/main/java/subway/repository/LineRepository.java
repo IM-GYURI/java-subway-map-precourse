@@ -11,6 +11,7 @@ import subway.domain.Station;
 import subway.exception.ErrorMessage;
 
 public class LineRepository {
+    private static final int LEAST_STATION_COUNT = 2;
     private static final List<Line> lines = new ArrayList<>();
 
     public static List<Line> lines() {
@@ -33,7 +34,7 @@ public class LineRepository {
         lines.removeIf(line -> Objects.equals(line.getName(), name));
     }
 
-    public static void addStation(Line line, Station station, int order) {
+    public static void addSection(Line line, Station station, int order) {
         if (containsStation(line, station)) {
             throw new IllegalArgumentException(ErrorMessage.LINE_ALREADY_HAS_THIS_STATION.toString());
         }
@@ -49,12 +50,12 @@ public class LineRepository {
 
     public static void deleteSection(Line line, Station station) {
         if (!containsStation(line, station)) {
-            throw new IllegalArgumentException(ErrorMessage.LINE_ALREADY_HAS_THIS_STATION.toString());
+            throw new IllegalArgumentException(ErrorMessage.LINE_DOES_NOT_HAVE_THIS_STATION.toString());
         }
 
         LinkedList<Station> stations = new LinkedList<>(line.getStations());
 
-        if (stations.size() < 3) {
+        if (stations.size() <= LEAST_STATION_COUNT) {
             throw new IllegalArgumentException(ErrorMessage.STATIONS_SHORTAGE.toString());
         }
 
@@ -75,6 +76,10 @@ public class LineRepository {
     public static boolean containsStation(Line line, Station station) {
         return line.getStations()
                 .contains(station);
+    }
+
+    public static void clearLines() {
+        lines.clear();
     }
 
     private static boolean isDuplicate(String name) {
