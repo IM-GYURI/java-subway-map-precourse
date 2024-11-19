@@ -1,6 +1,7 @@
 package subway.exception;
 
 import java.util.Objects;
+import subway.repository.StationRepository;
 
 public class InputValidator {
 
@@ -18,5 +19,10 @@ public class InputValidator {
     public static void validateStationsIsLessThanTwo(String[] stations) {
         ValidatorBuilder.from(stations)
                 .validate(value -> value.length < 2, ErrorMessage.STATIONS_SHORTAGE);
+    }
+
+    public static void validateStationExists(String name) {
+        ValidatorBuilder.from(name)
+                .validate(value -> StationRepository.findStation(value).isEmpty(), ErrorMessage.STATION_NOT_EXISTS);
     }
 }
