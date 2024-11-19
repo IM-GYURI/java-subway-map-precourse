@@ -13,6 +13,7 @@ public enum ErrorMessage {
     INVALID_FEATURE("선택할 수 없는 기능입니다."),
     INVALID_SECTION_ORDER("유효하지 않는 구간 순서입니다. 구간의 순서로는 역과 역 사이만 지정 가능합니다."),
     LINE_ALREADY_HAS_THIS_STATION("노선에 해당 역이 이미 존재합니다."),
+    ALREADY_IN_LINE("노선에 등록되어 있는 역은 삭제할 수 없습니다."),
     TOO_MANY_INVALID_INPUT("유효하지 않은 입력이 5회 반복되어 프로그램이 종료됩니다.");
 
     private static final String PREFIX = "[ERROR] ";
