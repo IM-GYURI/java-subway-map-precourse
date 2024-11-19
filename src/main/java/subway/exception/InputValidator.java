@@ -27,17 +27,20 @@ public class InputValidator {
 
     public static void validateStationExists(String name) {
         ValidatorBuilder.from(name)
-                .validate(value -> StationRepository.findStation(value).isEmpty(), ErrorMessage.STATION_NOT_EXISTS);
+                .validate(value -> StationRepository.findStation(value).isEmpty()
+                        , ErrorMessage.STATION_NOT_EXISTS);
     }
 
     public static void validateLineExists(String name) {
         ValidatorBuilder.from(name)
-                .validate(value -> LineRepository.findLine(value).isEmpty(), ErrorMessage.LINE_NOT_EXISTS);
+                .validate(value -> LineRepository.findLine(value).isEmpty()
+                        , ErrorMessage.LINE_NOT_EXISTS);
     }
 
     public static void validateDuplicateInput(Station upperStation, String lowerStationName) {
         ValidatorBuilder.from(lowerStationName)
-                .validate(value -> upperStation.getName().equals(value), ErrorMessage.DUPLICATE_STATION_INPUT_FOR_LINE);
+                .validate(value -> upperStation.getName().equals(value)
+                        , ErrorMessage.DUPLICATE_STATION_INPUT_FOR_LINE);
     }
 
     public static int validateOrder(Line line, String input) {
@@ -45,7 +48,8 @@ public class InputValidator {
 
         return ValidatorBuilder.from(input)
                 .validateIsInteger()
-                .validateInteger(value -> value < 1 && value > stations.size() - 1, ErrorMessage.INVALID_SECTION_ORDER)
+                .validateInteger(value -> value < 1 && value > stations.size() - 1
+                        , ErrorMessage.INVALID_SECTION_ORDER)
                 .getNumericValue();
     }
 
@@ -54,8 +58,8 @@ public class InputValidator {
                 .validate(
                         station -> LineRepository.lines().stream()
                                 .flatMap(line -> line.getStations().stream())
-                                .anyMatch(existingStation -> existingStation.getName().equals(station)),
-                        ErrorMessage.ALREADY_IN_LINE
+                                .anyMatch(existingStation -> existingStation.getName().equals(station))
+                        , ErrorMessage.ALREADY_IN_LINE
                 );
     }
 }
