@@ -48,4 +48,14 @@ public class InputValidator {
                 .validateInteger(value -> value < 1 && value > stations.size() - 1, ErrorMessage.INVALID_SECTION_ORDER)
                 .getNumericValue();
     }
+
+    public static void validateIsInLine(String findStation) {
+        ValidatorBuilder.from(findStation)
+                .validate(
+                        station -> LineRepository.lines().stream()
+                                .flatMap(line -> line.getStations().stream())
+                                .anyMatch(existingStation -> existingStation.getName().equals(station)),
+                        ErrorMessage.ALREADY_IN_LINE
+                );
+    }
 }
