@@ -5,6 +5,7 @@ public enum ErrorMessage {
     INVALID_INPUT("입력은 비어있을 수 없습니다."),
     INVALID_NAME_LENGTH("이름은 2글자 이상이어야 합니다."),
     DUPLICATE_STATION_NAME("이미 존재하는 역 이름입니다."),
+    DUPLICATE_STATION_INPUT_FOR_LINE("상행 종점역과 하행 종점역은 같을 수 없습니다."),
     STATION_NOT_EXISTS("존재하지 않는 역 이름입니다."),
     LINE_NOT_EXISTS("존재하지 않는 노선 이름입니다."),
     DUPLICATE_LINE_NAME("이미 존재하는 노선 이름입니다."),
