@@ -50,4 +50,34 @@ public class InputView {
                 + Sentence.PREFIX.message + "삭제할 노선 이름을 입력하세요.");
         return scanner.nextLine().trim();
     }
+
+    public String askLineNameOfSection() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "노선을 입력하세요.");
+        return scanner.nextLine().trim();
+    }
+
+    public String askStationNameOfSection() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "역이름을 입력하세요.");
+        return scanner.nextLine().trim();
+    }
+
+    public String askOrderOfSection() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "순서를 입력하세요.");
+        return scanner.nextLine().trim();
+    }
+
+    public String askDeleteLineOfSection() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "삭제할 구간의 노선을 입력하세요.");
+        return scanner.nextLine().trim();
+    }
+
+    public String askDeleteStationOfSection() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "삭제할 구간의 역을 입력하세요.");
+        return scanner.nextLine().trim();
+    }
 }
