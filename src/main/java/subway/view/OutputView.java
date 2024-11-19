@@ -12,6 +12,10 @@ public class OutputView {
                 + errorMessage + System.lineSeparator());
     }
 
+    public void printBlank() {
+        System.out.println();
+    }
+
     public void printMain() {
         System.out.println(Sentence.PREFIX.message + "메인 화면");
         System.out.println(MainFeature.SELECT_ONE.message + ". 역 관리");
