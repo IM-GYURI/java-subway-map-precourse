@@ -1,7 +1,10 @@
 package subway.exception;
 
+import java.util.List;
 import java.util.Objects;
+import subway.domain.Line;
 import subway.domain.Station;
+import subway.repository.LineRepository;
 import subway.repository.StationRepository;
 
 public class InputValidator {
@@ -27,8 +30,22 @@ public class InputValidator {
                 .validate(value -> StationRepository.findStation(value).isEmpty(), ErrorMessage.STATION_NOT_EXISTS);
     }
 
+    public static void validateLineExists(String name) {
+        ValidatorBuilder.from(name)
+                .validate(value -> LineRepository.findLine(value).isEmpty(), ErrorMessage.LINE_NOT_EXISTS);
+    }
+
     public static void validateDuplicateInput(Station upperStation, String lowerStationName) {
         ValidatorBuilder.from(lowerStationName)
                 .validate(value -> upperStation.getName().equals(value), ErrorMessage.DUPLICATE_STATION_INPUT_FOR_LINE);
+    }
+
+    public static int validateOrder(Line line, String input) {
+        List<Station> stations = line.getStations();
+
+        return ValidatorBuilder.from(input)
+                .validateIsInteger()
+                .validateInteger(value -> value < 1 && value > stations.size() - 1, ErrorMessage.INVALID_SECTION_ORDER)
+                .getNumericValue();
     }
 }
