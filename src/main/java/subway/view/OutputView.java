@@ -89,6 +89,25 @@ public class OutputView {
         });
     }
 
+    public void printSectionManagement() {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "구간 관리 화면");
+        System.out.println(SectionFeature.SELECT_ONE.message + ". 구간 등록");
+        System.out.println(SectionFeature.SELECT_TWO.message + ". 구간 삭제");
+        System.out.println(SectionFeature.BACK.message + ". 돌아가기" + System.lineSeparator());
+    }
+
+    public void printEnrollSectionSuccess() {
+        System.out.println(System.lineSeparator()
+                + Sentence.INFO.message + "구간이 등록되었습니다.");
+    }
+
+    public void printDeleteSectionSuccess() {
+        System.out.println(System.lineSeparator()
+                + Sentence.INFO.message + "구간이 삭제되었습니다.");
+    }
+
+
     private String formatStation(Station station) {
         return Sentence.INFO.message + station.getName();
     }
