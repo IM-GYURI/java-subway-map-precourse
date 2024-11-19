@@ -3,9 +3,13 @@ package subway.view;
 import java.util.List;
 import subway.domain.Line;
 import subway.domain.Station;
-import subway.repository.StationRepository;
 
 public class OutputView {
+
+    public static void printError(String errorMessage) {
+        System.out.println(System.lineSeparator()
+                + errorMessage + System.lineSeparator());
+    }
 
     public void printMain() {
         System.out.println(Sentence.PREFIX.message + "메인 화면");
@@ -19,10 +23,10 @@ public class OutputView {
     public void printStationManagement() {
         System.out.println(System.lineSeparator()
                 + Sentence.PREFIX.message + "역 관리 화면");
-        System.out.println(StationFeature.SELECT_ONE.message + ". 역 등록");
-        System.out.println(StationFeature.SELECT_TWO.message + ". 역 삭제");
-        System.out.println(StationFeature.SELECT_THREE.message + ". 역 조회");
-        System.out.println(StationFeature.BACK.message + ". 돌아가기" + System.lineSeparator());
+        System.out.println(StationLineFeature.SELECT_ONE.message + ". 역 등록");
+        System.out.println(StationLineFeature.SELECT_TWO.message + ". 역 삭제");
+        System.out.println(StationLineFeature.SELECT_THREE.message + ". 역 조회");
+        System.out.println(StationLineFeature.BACK.message + ". 돌아가기" + System.lineSeparator());
     }
 
     public void printEnrollStationSuccess() {
@@ -35,8 +39,7 @@ public class OutputView {
                 + Sentence.INFO.message + "지하철 역이 삭제되었습니다.");
     }
 
-    public void printStations() {
-        List<Station> stations = StationRepository.stations();
+    public void printStations(List<Station> stations) {
         StringBuilder sentences = new StringBuilder();
         stations.forEach(station -> {
             sentences.append(formatStation(station))
@@ -57,13 +60,40 @@ public class OutputView {
         });
     }
 
-    public static void printError(String errorMessage) {
+    public void printLineManagement() {
         System.out.println(System.lineSeparator()
-                + errorMessage + System.lineSeparator());
+                + Sentence.PREFIX.message + "노선 관리 화면");
+        System.out.println(StationLineFeature.SELECT_ONE.message + ". 노선 등록");
+        System.out.println(StationLineFeature.SELECT_TWO.message + ". 노선 삭제");
+        System.out.println(StationLineFeature.SELECT_THREE.message + ". 노선 조회");
+        System.out.println(StationLineFeature.BACK.message + ". 돌아가기" + System.lineSeparator());
+    }
+
+    public void printEnrollLineSuccess() {
+        System.out.println(System.lineSeparator()
+                + Sentence.INFO.message + "지하철 노선이 등록되었습니다.");
+    }
+
+    public void printDeleteLineSuccess() {
+        System.out.println(System.lineSeparator()
+                + Sentence.INFO.message + "지하철 노선이 삭제되었습니다.");
+    }
+
+    public void printLines(List<Line> lines) {
+        System.out.println(System.lineSeparator()
+                + Sentence.PREFIX.message + "노선 목록");
+        lines.forEach(line -> {
+            String sentence = formatLine(line);
+            System.out.println(sentence);
+        });
     }
 
     private String formatStation(Station station) {
         return Sentence.INFO.message + station.getName();
+    }
+
+    private String formatLine(Line line) {
+        return Sentence.INFO.message + line.getName();
     }
 
     private String formatLineAndStations(Line line) {
