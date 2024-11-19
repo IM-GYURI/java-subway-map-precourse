@@ -1,6 +1,7 @@
 package subway.exception;
 
 import java.util.Objects;
+import subway.domain.Station;
 import subway.repository.StationRepository;
 
 public class InputValidator {
@@ -24,5 +25,10 @@ public class InputValidator {
     public static void validateStationExists(String name) {
         ValidatorBuilder.from(name)
                 .validate(value -> StationRepository.findStation(value).isEmpty(), ErrorMessage.STATION_NOT_EXISTS);
+    }
+
+    public static void validateDuplicateInput(Station upperStation, String lowerStationName) {
+        ValidatorBuilder.from(lowerStationName)
+                .validate(value -> upperStation.getName().equals(value), ErrorMessage.DUPLICATE_STATION_INPUT_FOR_LINE);
     }
 }
