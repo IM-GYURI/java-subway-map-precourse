@@ -1,6 +1,7 @@
 package subway.view;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import subway.domain.Line;
 import subway.domain.Station;
 
@@ -54,10 +55,10 @@ public class OutputView {
     public void printSubwayLinesInformation(List<Line> lines) {
         System.out.println(System.lineSeparator()
                 + Sentence.PREFIX.message + "지하철 노선도");
-        lines.forEach(line -> {
-            String sentence = formatLineAndStations(line);
-            System.out.println(sentence);
-        });
+        String result = lines.stream()
+                .map(this::formatLineAndStations)
+                .collect(Collectors.joining(System.lineSeparator().repeat(2)));
+        System.out.println(result);
     }
 
     public void printLineManagement() {
