@@ -37,6 +37,10 @@ public class StationRepository {
                 .findFirst();
     }
 
+    public static void clearStations() {
+        stations.clear();
+    }
+
     private static boolean isDuplicate(String name) {
         return stations.stream()
                 .anyMatch(station -> Objects.equals(station.getName(), name));
