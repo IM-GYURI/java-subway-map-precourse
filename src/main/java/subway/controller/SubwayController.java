@@ -13,6 +13,7 @@ import subway.util.RetryHandler;
 import subway.view.InputView;
 import subway.view.MainFeature;
 import subway.view.OutputView;
+import subway.view.SectionFeature;
 import subway.view.StationLineFeature;
 
 public class SubwayController {
@@ -50,6 +51,7 @@ public class SubwayController {
         EnumMap<MainFeature, Runnable> actions = new EnumMap<>(MainFeature.class);
         actions.put(MainFeature.SELECT_ONE, () -> processStationManagement(selectStationFeature()));
         actions.put(MainFeature.SELECT_TWO, () -> processLineManagement(selectLineFeature()));
+        actions.put(MainFeature.SELECT_THREE, () -> processSectionManagement(selectSectionFeature()));
         actions.put(MainFeature.SELECT_FOUR, this::showSubwayLines);
         actions.put(MainFeature.QUIT, this::quitProgram);
 
@@ -176,7 +178,8 @@ public class SubwayController {
             InputValidator.validateNameLength(upperStation);
             InputValidator.validateStationExists(upperStation);
 
-            return StationRepository.findStation(upperStation).get();
+            return StationRepository.findStation(upperStation)
+                    .orElseThrow();
         });
     }
 
@@ -188,7 +191,8 @@ public class SubwayController {
             InputValidator.validateStationExists(lowerStation);
             InputValidator.validateDuplicateInput(upperStation, lowerStation);
 
-            return StationRepository.findStation(lowerStation).get();
+            return StationRepository.findStation(lowerStation)
+                    .orElseThrow();
         });
     }
 
@@ -202,6 +206,103 @@ public class SubwayController {
         });
     }
 
+    private SectionFeature selectSectionFeature() {
+        outputView.printSectionManagement();
+        return RetryHandler.handleRetry(() -> {
+            String selectedFeature = inputView.askFeature();
+            InputValidator.validateInput(selectedFeature);
+
+            return SectionFeature.getFeatureFromInput(selectedFeature);
+        });
+    }
+
+    private void processSectionManagement(SectionFeature selectedFeature) {
+        EnumMap<SectionFeature, Runnable> actions = new EnumMap<>(SectionFeature.class);
+        actions.put(SectionFeature.SELECT_ONE, this::enrollSection);
+        actions.put(SectionFeature.SELECT_TWO, this::deleteSection);
+        actions.put(SectionFeature.BACK, () -> {
+        });
+
+        Runnable action = actions.get(selectedFeature);
+        if (action != null) {
+            action.run();
+        }
+    }
+
+    private void enrollSection() {
+        RetryHandler.handleRetry(() -> {
+            Line line = getEnrollLineOfSection();
+            Station station = getStationOfSection();
+            int order = getOrderOfSection(line);
+
+            LineRepository.addStation(line, station, order);
+            outputView.printEnrollSectionSuccess();
+        });
+    }
+
+    private void deleteSection() {
+        RetryHandler.handleRetry(() -> {
+            Line line = getDeleteLineOfSection();
+            Station station = getDeleteStationOfSection();
+
+            LineRepository.deleteSection(line, station);
+            outputView.printDeleteSectionSuccess();
+        });
+    }
+
+    private Line getEnrollLineOfSection() {
+        return RetryHandler.handleRetry(() -> {
+            String lineName = inputView.askLineNameOfSection();
+            InputValidator.validateInput(lineName);
+            InputValidator.validateNameLength(lineName);
+            InputValidator.validateLineExists(lineName);
+
+            return LineRepository.findLine(lineName)
+                    .orElseThrow();
+        });
+    }
+
+    private Station getStationOfSection() {
+        return RetryHandler.handleRetry(() -> {
+            String upperStation = inputView.askStationNameOfSection();
+            InputValidator.validateInput(upperStation);
+            InputValidator.validateNameLength(upperStation);
+            InputValidator.validateStationExists(upperStation);
+
+            return StationRepository.findStation(upperStation)
+                    .orElseThrow();
+        });
+    }
+
+    private int getOrderOfSection(Line line) {
+        return RetryHandler.handleRetry(() -> {
+            return InputValidator.validateOrder(line, inputView.askOrderOfSection());
+        });
+    }
+
+    private Line getDeleteLineOfSection() {
+        return RetryHandler.handleRetry(() -> {
+            String lineName = inputView.askDeleteLineOfSection();
+            InputValidator.validateInput(lineName);
+            InputValidator.validateNameLength(lineName);
+            InputValidator.validateLineExists(lineName);
+
+            return LineRepository.findLine(lineName)
+                    .orElseThrow();
+        });
+    }
+
+    private Station getDeleteStationOfSection() {
+        return RetryHandler.handleRetry(() -> {
+            String upperStation = inputView.askDeleteStationOfSection();
+            InputValidator.validateInput(upperStation);
+            InputValidator.validateNameLength(upperStation);
+            InputValidator.validateStationExists(upperStation);
+
+            return StationRepository.findStation(upperStation)
+                    .orElseThrow();
+        });
+    }
 
     private void showSubwayLines() {
         List<Line> lines = LineRepository.lines();
