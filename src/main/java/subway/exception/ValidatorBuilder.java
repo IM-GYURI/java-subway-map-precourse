@@ -39,10 +39,6 @@ public class ValidatorBuilder<T> {
         }
     }
 
-    public T get() {
-        return value;
-    }
-
     public int getNumericValue() {
         return numericValue;
     }
