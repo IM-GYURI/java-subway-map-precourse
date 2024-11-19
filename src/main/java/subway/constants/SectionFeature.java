@@ -1,4 +1,4 @@
-package subway.view;
+package subway.constants;
 
 import subway.exception.ErrorMessage;
 

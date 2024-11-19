@@ -1,16 +1,17 @@
-package subway.view;
+package subway.constants;
 
 import subway.exception.ErrorMessage;
 
-public enum StationLineFeature {
+public enum MainFeature {
     SELECT_ONE("1"),
     SELECT_TWO("2"),
     SELECT_THREE("3"),
-    BACK("B");
+    SELECT_FOUR("4"),
+    QUIT("Q");
 
     final String message;
 
-    StationLineFeature(String message) {
+    MainFeature(String message) {
         this.message = message;
     }
 
@@ -19,8 +20,8 @@ public enum StationLineFeature {
         return message;
     }
 
-    public static StationLineFeature getFeatureFromInput(String input) {
-        for (StationLineFeature feature : StationLineFeature.values()) {
+    public static MainFeature getFeatureFromInput(String input) {
+        for (MainFeature feature : MainFeature.values()) {
             if (feature.toString().equalsIgnoreCase(input)) {
                 return feature;
             }

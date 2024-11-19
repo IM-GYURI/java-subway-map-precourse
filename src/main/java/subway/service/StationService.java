@@ -1,9 +1,9 @@
 package subway.service;
 
+import subway.constants.StationLineFeature;
 import subway.domain.Station;
 import subway.exception.InputValidator;
 import subway.repository.StationRepository;
-import subway.view.StationLineFeature;
 
 public class StationService {
 

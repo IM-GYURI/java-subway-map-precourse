@@ -1,7 +1,7 @@
 package subway.service;
 
+import subway.constants.SectionFeature;
 import subway.exception.InputValidator;
-import subway.view.SectionFeature;
 
 public class SectionService {
 

@@ -1,11 +1,11 @@
 package subway.service;
 
 import java.util.LinkedList;
+import subway.constants.StationLineFeature;
 import subway.domain.Line;
 import subway.domain.Station;
 import subway.exception.InputValidator;
 import subway.repository.LineRepository;
-import subway.view.StationLineFeature;
 
 public class LineService {
 

@@ -1,7 +1,7 @@
 package subway.service;
 
+import subway.constants.MainFeature;
 import subway.exception.InputValidator;
-import subway.view.MainFeature;
 
 public class MainService {
 

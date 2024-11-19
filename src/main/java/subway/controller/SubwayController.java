@@ -1,6 +1,9 @@
 package subway.controller;
 
 import java.util.EnumMap;
+import subway.constants.MainFeature;
+import subway.constants.SectionFeature;
+import subway.constants.StationLineFeature;
 import subway.domain.Line;
 import subway.domain.Station;
 import subway.exception.InputValidator;
@@ -13,10 +16,7 @@ import subway.service.StationService;
 import subway.util.FileLoader;
 import subway.util.RetryHandler;
 import subway.view.InputView;
-import subway.view.MainFeature;
 import subway.view.OutputView;
-import subway.view.SectionFeature;
-import subway.view.StationLineFeature;
 
 public class SubwayController {
 
@@ -208,7 +208,7 @@ public class SubwayController {
             Station station = getStationOfSection();
             int order = getOrderOfSection(line);
 
-            LineRepository.addStation(line, station, order);
+            LineRepository.addSection(line, station, order);
             outputView.printEnrollSectionSuccess();
         });
     }
