@@ -35,7 +35,7 @@ public class FileLoader {
         }
     }
 
-    private static void handleStation(String input) {
+    static void handleStation(String input) {
         InputValidator.validateInput(input);
         InputValidator.validateNameLength(input);
 
@@ -52,7 +52,7 @@ public class FileLoader {
         }
     }
 
-    private static void handleLine(String input) {
+    static void handleLine(String input) {
         InputValidator.validateInput(input);
 
         String[] parts = input.split(LINE_SPLITTER);
@@ -70,7 +70,7 @@ public class FileLoader {
         LineRepository.addLine(line);
     }
 
-    private static LinkedList<Station> handleStationsOfLine(String[] stations) {
+    static LinkedList<Station> handleStationsOfLine(String[] stations) {
         InputValidator.validateStationsIsLessThanTwo(stations);
         LinkedList<Station> stationsOfLine = new LinkedList<>();
 
