@@ -1,13 +1,15 @@
 package subway.controller;
 
 import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
 import subway.domain.Line;
 import subway.domain.Station;
 import subway.exception.InputValidator;
 import subway.repository.LineRepository;
 import subway.repository.StationRepository;
+import subway.service.LineService;
+import subway.service.MainService;
+import subway.service.SectionService;
+import subway.service.StationService;
 import subway.util.FileLoader;
 import subway.util.RetryHandler;
 import subway.view.InputView;
@@ -20,12 +22,21 @@ public class SubwayController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final MainService mainService;
+    private final StationService stationService;
+    private final LineService lineService;
+    private final SectionService sectionService;
 
     private boolean isRunning = true;
 
-    public SubwayController(InputView inputView, OutputView outputView) {
+    public SubwayController(InputView inputView, OutputView outputView, MainService mainService,
+                            StationService stationService, LineService lineService, SectionService sectionService) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.mainService = mainService;
+        this.stationService = stationService;
+        this.lineService = lineService;
+        this.sectionService = sectionService;
     }
 
     public void start() {
@@ -33,7 +44,7 @@ public class SubwayController {
 
         while (isRunning) {
             handledMain(selectMainFeature());
-            System.out.println();
+            outputView.printBlank();
         }
     }
 
@@ -41,9 +52,7 @@ public class SubwayController {
         outputView.printMain();
         return RetryHandler.handleRetry(() -> {
             String selectedFeature = inputView.askFeature();
-            InputValidator.validateInput(selectedFeature);
-
-            return MainFeature.getFeatureFromInput(selectedFeature);
+            return mainService.selectMainFeature(selectedFeature);
         });
     }
 
@@ -56,6 +65,10 @@ public class SubwayController {
         actions.put(MainFeature.QUIT, this::quitProgram);
 
         Runnable action = actions.get(selectedFeature);
+        executeAction(action);
+    }
+
+    private void executeAction(Runnable action) {
         if (action != null) {
             action.run();
         }
@@ -65,9 +78,7 @@ public class SubwayController {
         outputView.printStationManagement();
         return RetryHandler.handleRetry(() -> {
             String selectedFeature = inputView.askFeature();
-            InputValidator.validateInput(selectedFeature);
-
-            return StationLineFeature.getFeatureFromInput(selectedFeature);
+            return stationService.selectStationFeature(selectedFeature);
         });
     }
 
@@ -80,18 +91,13 @@ public class SubwayController {
         });
 
         Runnable action = actions.get(selectedFeature);
-        if (action != null) {
-            action.run();
-        }
+        executeAction(action);
     }
 
     private void enrollStation() {
         RetryHandler.handleRetry(() -> {
             String stationName = inputView.askStationEnroll();
-            InputValidator.validateInput(stationName);
-            InputValidator.validateNameLength(stationName);
-
-            StationRepository.addStation(new Station(stationName));
+            stationService.addStation(stationName);
             outputView.printEnrollStationSuccess();
         });
     }
@@ -99,11 +105,7 @@ public class SubwayController {
     private void deleteStation() {
         RetryHandler.handleRetry(() -> {
             String stationName = inputView.askStationDelete();
-            InputValidator.validateInput(stationName);
-            InputValidator.validateNameLength(stationName);
-            InputValidator.validateIsInLine(stationName);
-
-            StationRepository.deleteStation(stationName);
+            stationService.deleteStation(stationName);
             outputView.printDeleteStationSuccess();
         });
     }
@@ -116,9 +118,7 @@ public class SubwayController {
         outputView.printLineManagement();
         return RetryHandler.handleRetry(() -> {
             String selectedFeature = inputView.askFeature();
-            InputValidator.validateInput(selectedFeature);
-
-            return StationLineFeature.getFeatureFromInput(selectedFeature);
+            return lineService.selectLineFeature(selectedFeature);
         });
     }
 
@@ -131,9 +131,7 @@ public class SubwayController {
         });
 
         Runnable action = actions.get(selectedFeature);
-        if (action != null) {
-            action.run();
-        }
+        executeAction(action);
     }
 
     private void handleEnrollLine() {
@@ -144,12 +142,7 @@ public class SubwayController {
     }
 
     private void enrollLine(String lineName, Station upperStation, Station lowerStation) {
-        LinkedList<Station> stations = new LinkedList<>();
-        stations.add(upperStation);
-        stations.add(lowerStation);
-
-        Line line = new Line(lineName, stations);
-        LineRepository.addLine(line);
+        lineService.enrollLine(lineName, upperStation, lowerStation);
         outputView.printEnrollLineSuccess();
     }
 
@@ -165,45 +158,28 @@ public class SubwayController {
     private String getLEnrollLineName() {
         return RetryHandler.handleRetry(() -> {
             String lineName = inputView.askLineEnroll();
-            InputValidator.validateInput(lineName);
-            InputValidator.validateNameLength(lineName);
-
-            return lineName;
+            return lineService.getValidLineName(lineName);
         });
     }
 
     private Station getUpperStation() {
         return RetryHandler.handleRetry(() -> {
             String upperStation = inputView.askUpperStation();
-            InputValidator.validateInput(upperStation);
-            InputValidator.validateNameLength(upperStation);
-            InputValidator.validateStationExists(upperStation);
-
-            return StationRepository.findStation(upperStation)
-                    .orElseThrow();
+            return stationService.getStation(upperStation);
         });
     }
 
     private Station getLowerStation(Station upperStation) {
         return RetryHandler.handleRetry(() -> {
             String lowerStation = inputView.askLowerStation();
-            InputValidator.validateInput(lowerStation);
-            InputValidator.validateNameLength(lowerStation);
-            InputValidator.validateStationExists(lowerStation);
-            InputValidator.validateDuplicateInput(upperStation, lowerStation);
-
-            return StationRepository.findStation(lowerStation)
-                    .orElseThrow();
+            return stationService.getLowerStation(upperStation, lowerStation);
         });
     }
 
     private String getLDeleteLine() {
         return RetryHandler.handleRetry(() -> {
             String lineName = inputView.askLineDelete();
-            InputValidator.validateInput(lineName);
-            InputValidator.validateNameLength(lineName);
-
-            return lineName;
+            return lineService.getValidLineName(lineName);
         });
     }
 
@@ -211,9 +187,7 @@ public class SubwayController {
         outputView.printSectionManagement();
         return RetryHandler.handleRetry(() -> {
             String selectedFeature = inputView.askFeature();
-            InputValidator.validateInput(selectedFeature);
-
-            return SectionFeature.getFeatureFromInput(selectedFeature);
+            return sectionService.selectSectionFeature(selectedFeature);
         });
     }
 
@@ -225,9 +199,7 @@ public class SubwayController {
         });
 
         Runnable action = actions.get(selectedFeature);
-        if (action != null) {
-            action.run();
-        }
+        executeAction(action);
     }
 
     private void enrollSection() {
@@ -254,24 +226,14 @@ public class SubwayController {
     private Line getEnrollLineOfSection() {
         return RetryHandler.handleRetry(() -> {
             String lineName = inputView.askLineNameOfSection();
-            InputValidator.validateInput(lineName);
-            InputValidator.validateNameLength(lineName);
-            InputValidator.validateLineExists(lineName);
-
-            return LineRepository.findLine(lineName)
-                    .orElseThrow();
+            return lineService.getLine(lineName);
         });
     }
 
     private Station getStationOfSection() {
         return RetryHandler.handleRetry(() -> {
-            String upperStation = inputView.askStationNameOfSection();
-            InputValidator.validateInput(upperStation);
-            InputValidator.validateNameLength(upperStation);
-            InputValidator.validateStationExists(upperStation);
-
-            return StationRepository.findStation(upperStation)
-                    .orElseThrow();
+            String stationName = inputView.askStationNameOfSection();
+            return stationService.getStation(stationName);
         });
     }
 
@@ -284,30 +246,19 @@ public class SubwayController {
     private Line getDeleteLineOfSection() {
         return RetryHandler.handleRetry(() -> {
             String lineName = inputView.askDeleteLineOfSection();
-            InputValidator.validateInput(lineName);
-            InputValidator.validateNameLength(lineName);
-            InputValidator.validateLineExists(lineName);
-
-            return LineRepository.findLine(lineName)
-                    .orElseThrow();
+            return lineService.getLine(lineName);
         });
     }
 
     private Station getDeleteStationOfSection() {
         return RetryHandler.handleRetry(() -> {
-            String upperStation = inputView.askDeleteStationOfSection();
-            InputValidator.validateInput(upperStation);
-            InputValidator.validateNameLength(upperStation);
-            InputValidator.validateStationExists(upperStation);
-
-            return StationRepository.findStation(upperStation)
-                    .orElseThrow();
+            String stationName = inputView.askDeleteStationOfSection();
+            return stationService.getStation(stationName);
         });
     }
 
     private void showSubwayLines() {
-        List<Line> lines = LineRepository.lines();
-        outputView.printSubwayLinesInformation(lines);
+        outputView.printSubwayLinesInformation(LineRepository.lines());
     }
 
     private void quitProgram() {
